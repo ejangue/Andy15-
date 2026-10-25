@@ -1,0 +1,15 @@
+{
+	auto_https off
+}
+
+:{$PORT} {
+	# Seul le chemin WebSocket secret est transmis à Xray (en interne).
+	@proxy path {$WSS_PATH}
+	reverse_proxy @proxy 127.0.0.1:10085
+
+	# Tout le reste (sondes, navigateurs, DPI) voit un site banal.
+	header {
+		-Server
+	}
+	respond "<html><head><title>Welcome</title></head><body><h1>It works!</h1></body></html>" 200
+}

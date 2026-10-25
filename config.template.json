@@ -1,0 +1,29 @@
+{
+  "log": { "loglevel": "warning" },
+  "inbounds": [
+    {
+      "tag": "vless-ws",
+      "listen": "127.0.0.1",
+      "port": 10085,
+      "protocol": "vless",
+      "settings": {
+        "clients": [ { "id": "${UUID}", "level": 0, "email": "user@vless" } ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": { "path": "${WSS_PATH}" }
+      },
+      "sniffing": { "enabled": true, "destOverride": ["http", "tls", "quic"] }
+    }
+  ],
+  "outbounds": [
+    { "tag": "direct", "protocol": "freedom", "settings": {} },
+    { "tag": "block", "protocol": "blackhole", "settings": {} }
+  ],
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [ { "type": "field", "ip": ["geoip:private"], "outboundTag": "block" } ]
+  }
+}
